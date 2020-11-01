@@ -32,13 +32,13 @@ white.test <- function(modelo, significancia = 0.05){
 	if(nr2 > x2){
 		strn <- paste("Rejeitamos H0 a", significancia, '%')
 	} else{
-		strn <- paste("N~ao rejeitamos H0 a", significancia, '%')	
+		strn <- paste("Não rejeitamos H0 a", significancia, '%')	
 	}
 	
 	nr2 <- as.character(nr2)
 	x2 <- as.character(x2)
 	hip1 <- 'H0 : HOMOCEDASTICIDADE'
-	hip2 <- 'H1 : AUSENCIA DE HOMOCEDASTICIDADE'
+	hip2 <- 'H1 : AUSÊNCIA DE HOMOCEDASTICIDADE'
 
 	nr2 <- paste("Estatística de Teste:", nr2)
 	x2 <- paste("Região Crítica:", x2)
