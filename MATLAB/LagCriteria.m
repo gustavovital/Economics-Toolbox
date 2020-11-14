@@ -33,7 +33,7 @@ function [Table] = LagCriteria(VAR, iterations)
     end
     
     AIC  = AIC(2:length(AIC));
-	BIC  = BIC(2:length(BIC));
+    BIC  = BIC(2:length(BIC));
     Lags = Lags(2:length(Lags));
     
     Table = table(Lags, AIC, BIC);
