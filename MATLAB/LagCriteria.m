@@ -20,6 +20,7 @@ function [Table] = LagCriteria(VAR, iterations)
         
     end  
     
+    
     aicmin = min(str2double(AIC));
     bicmin = min(str2double(BIC));
     
