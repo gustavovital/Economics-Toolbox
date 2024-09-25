@@ -1,6 +1,7 @@
 ## Modules
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import minimize_scalar
 
 # graphical perspective of solow-swan model
 
@@ -54,4 +55,85 @@ def plot45(kstar=None):
 
 plot45()
 
+kstar = ((s * A) / delta)**(1/(1 - alpha))
+
+plot45(kstar)
+
+## analyse variations of k
+A, s, alpha, delta = 2, 0.3, 0.3, 0.4
+x0 = np.array([.25, 1.25, 3.25])
+
+ts_length = 20
+xmin, xmax = 0, ts_length
+ymin, ymax = 0, 3.5
+
+def simulate_ts(x0_values, ts_length):
+
+    k_star = (s * A / delta)**(1/(1-alpha))
+    fig, ax = plt.subplots(figsize=[11, 5])
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
+
+    ts = np.zeros(ts_length)
+
+    # simulate and plot time series
+    for x_init in x0_values:
+        ts[0] = x_init
+        for t in range(1, ts_length):
+            ts[t] = g(A, s, alpha, delta, ts[t-1])
+        ax.plot(np.arange(ts_length), ts, '-o', ms=4, alpha=0.6,
+                label=r'$k_0=%g$' %x_init)
+    ax.plot(np.arange(ts_length), np.full(ts_length,k_star),
+            alpha=0.6, color='red', label=r'$k^*$')
+    ax.legend(fontsize=10)
+
+    ax.set_xlabel(r'$t$', fontsize=14)
+    ax.set_ylabel(r'$k_t$', fontsize=14)
+
+    plt.show()
+
+
+simulate_ts(x0, ts_length)
+
+A = 2.0
+alpha = 0.3
+delta = 0.5
+
+s_grid = np.linspace(0, 1, 1000)
+k_star = ((s_grid * A) / delta)**(1/(1 - alpha))
+c_star = (1 - s_grid) * A * k_star ** alpha
+
+def calc_c_star(s):
+    k = ((s * A) / delta)**(1/(1 - alpha))
+    return - (1 - s) * A * k ** alpha # o sinal negativo é para a otimização
+
+return_values = minimize_scalar(calc_c_star, bounds=(0, 1))
+s_star_max = return_values.x
+c_star_max = -return_values.fun
+print(f"Function is maximized at s = {round(s_star_max, 4)}")
+
+x_s_max = np.array([s_star_max, s_star_max])
+y_s_max = np.array([0, c_star_max])
+
+fig, ax = plt.subplots(figsize=[11, 5])
+
+fps = (c_star_max,)
+
+# Highlight the maximum point with a marker
+ax.plot((s_star_max, ), (c_star_max,), 'go', ms=8, alpha=0.6)
+
+ax.annotate(r'$s^*$',
+         xy=(s_star_max, c_star_max),
+         xycoords='data',
+         xytext=(20, -50),
+         textcoords='offset points',
+         fontsize=12,
+         arrowprops=dict(arrowstyle="->"))
+ax.plot(s_grid, c_star, label=r'$c*(s)$')
+ax.plot(x_s_max, y_s_max, alpha=0.5, ls='dotted')
+ax.set_xlabel(r'$s$')
+ax.set_ylabel(r'$c^*(s)$')
+ax.legend()
+
+plt.show()
 
