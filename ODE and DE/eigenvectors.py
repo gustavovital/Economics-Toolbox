@@ -162,3 +162,55 @@ plt.title("Phase Diagram for the Linearized System around $X_+$")
 plt.legend()
 plt.grid()
 plt.show()
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+# Define the nonlinear system after shifting the origin to X+ = (1, 1)
+def nonlinear_system(U, t):
+    u, v = U
+    dudt = (u + 2) * v
+    dvdt = u * (v + 2)
+    return [dudt, dvdt]
+
+# Set up a finer grid in the phase space for better vector field resolution
+u_values = np.linspace(-1.5, 1.5, 20)
+v_values = np.linspace(-1.5, 1.5, 20)
+U, V = np.meshgrid(u_values, v_values)
+
+# Calculate the vector field for the shifted system
+dU = (U + 2) * V
+dV = U * (V + 2)
+
+# Plot the vector field with a lower alpha for clarity
+plt.figure(figsize=(10, 10))
+plt.quiver(U, V, dU, dV, color="gray", alpha=0.3)
+
+# Set up varied initial conditions closer and slightly farther from the origin
+initial_conditions = [
+    [0.1, 0.1], [-0.1, -0.1], [0.5, -0.5], [-0.5, 0.5],
+    [0.2, -0.2], [-0.2, 0.2], [0.8, 0.1], [0.1, -0.8],
+    [-0.8, -0.1], [-0.1, 0.8], [1.0, 1.0], [-1.0, -1.0]
+]
+
+# Simulate and plot trajectories for each initial condition
+t = np.linspace(0, 10, 1000)  # increase time steps for smoother curves
+for ic in initial_conditions:
+    trajectory = odeint(nonlinear_system, ic, t)
+    plt.plot(trajectory[:, 0], trajectory[:, 1], 'b-', alpha=0.8, linewidth=1.5)
+
+# Mark the shifted equilibrium point
+plt.plot(0, 0, 'ro', label="Equilibrium (Shifted)")
+
+# Formatting the plot
+plt.axhline(0, color='black', linewidth=0.5)
+plt.axvline(0, color='black', linewidth=0.5)
+plt.xlim(-1.5, 1.5)
+plt.ylim(-1.5, 1.5)
+plt.xlabel("$u$")
+plt.ylabel("$v$")
+plt.title("Improved Phase Diagram for the Nonlinear System Near $X_+ = (1,1)$")
+plt.legend()
+plt.grid(True)
+plt.show()
