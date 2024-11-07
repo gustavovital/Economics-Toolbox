@@ -43,3 +43,38 @@ plt.xlim(-2, 2)
 
 # Show plot
 plt.show()
+
+##########################
+
+# Define the vector field based on the system of equations
+def vector_field(X, Y):
+    U = 4 * X
+    V = Y
+    return U, V
+
+# Create a grid of points
+x = np.linspace(-2, 2, 20)
+y = np.linspace(-2, 2, 20)
+X, Y = np.meshgrid(x, y)
+U, V = vector_field(X, Y)
+
+# Plot the phase diagram
+plt.figure(figsize=(8, 8))
+plt.quiver(X, Y, U, V, color="blue")
+
+# Mark the equilibrium point at (0, 0)
+plt.plot(0, 0, 'ro', label="Equilibrium at (0, 0)")
+
+# Additional plot settings
+plt.xlabel('$x$')
+plt.ylabel('$y$')
+plt.title('Phase Diagram of the System')
+plt.xlim(-2, 2)
+plt.ylim(-2, 2)
+plt.axhline(0, color='black', linewidth=0.5)
+plt.axvline(0, color='black', linewidth=0.5)
+plt.legend()
+plt.grid(True)
+
+# Show plot
+plt.show()
